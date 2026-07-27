@@ -25,3 +25,7 @@ jobs:
         with:
           name: merged_final
           path: merged_final.bin
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: firmware-${{ github.run_number }}
+          files: merged_final.bin
