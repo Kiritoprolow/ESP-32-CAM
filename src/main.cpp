@@ -35,6 +35,7 @@ unsigned long lastWiFiCheck = 0;
 const unsigned long wifiCheckInterval = 5000;
 
 unsigned long lastConnectedAt = 0;
+unsigned long lastFrameSentAt = 0;
 
 int extractJsonIntValue(const String& json, const char* key) {
     String searchKey = String("\"") + key + "\":";
@@ -115,6 +116,7 @@ void setup() {
 }
 
 void loop() {
+    if (millis() > 10UL*60UL*1000UL) { Serial.println("Scheduled restart to prevent heap fragmentation"); ESP.restart(); }
     if (millis() - lastWiFiCheck >= wifiCheckInterval) {
         lastWiFiCheck = millis();
         if (WiFi.status() != WL_CONNECTED) {
@@ -130,6 +132,7 @@ void loop() {
         camera_fb_t * fb = esp_camera_fb_get();
         if (!fb) return;
         webSocket.sendBIN(fb->buf, fb->len);
+        lastFrameSentAt = millis();
         esp_camera_fb_return(fb);
     }
 }
