@@ -1,0 +1,27 @@
+name: Build ESP32 Firmware
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install platformio
+      - run: pio run -e esp32cam
+      - run: |
+          python -m esptool --chip esp32 merge_bin \
+            -o merged_final.bin \
+            --flash_mode keep --flash_freq keep --flash_size 4MB \
+            0x1000 .pio/build/esp32cam/bootloader.bin \
+            0x8000 .pio/build/esp32cam/partitions.bin \
+            0x10000 .pio/build/esp32cam/firmware.bin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged_final
+          path: merged_final.bin
