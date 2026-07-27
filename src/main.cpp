@@ -91,6 +91,7 @@ bool initCamera() {
     config.frame_size = FRAMESIZE_SVGA;
     config.jpeg_quality = 12;
     config.fb_count = 2;
+    config.fb_location = CAMERA_FB_IN_PSRAM;
 
     return esp_camera_init(&config) == ESP_OK;
 }
