@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <esp_camera.h>
 #include <WebSocketsClient.h>
+#define DEBUG_WEBSOCKETS_CLIENT
 
 const char* ssid = "Ha Nguyen";
 const char* password = "12345678";
@@ -96,6 +97,7 @@ bool initCamera() {
     return esp_camera_init(&config) == ESP_OK;
 }
 
+#define WEBSOCKETS_DEBUG_LEVEL      WStype_ERROR
 void setup() {
     Serial.begin(115200);
     if (!initCamera()) { Serial.println("Camera init failed!"); return; }
